@@ -34,6 +34,14 @@ public class ProductService {
     return products.stream().map(this::mapToProductResponse).toList();
   }
 
+  public void deleteProduct(String id) {
+    if (!productRepository.existsById(id))
+      throw new IllegalArgumentException("Product with ID " + id + " not found");
+
+    productRepository.deleteById(id);
+    log.info("Product {} is deleted", id);
+  }
+
   private ProductResponse mapToProductResponse(Product product) {
     return ProductResponse.builder()
         .id(product.getId())
