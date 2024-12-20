@@ -1,8 +1,10 @@
 package com.shop.product_service.service;
 
 import com.shop.product_service.dto.ProductRequest;
+import com.shop.product_service.dto.ProductResponse;
 import com.shop.product_service.model.Product;
 import com.shop.product_service.repository.ProductRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,21 @@ public class ProductService {
             .build();
 
     productRepository.save(product);
-    log.info("Prodcut {} is saved", product.getId());
+    log.info("Product {} is saved", product.getId());
+  }
+
+  public List<ProductResponse> getAllProducts() {
+    List<Product> products = productRepository.findAll();
+
+    return products.stream().map(this::mapToProductResponse).toList();
+  }
+
+  private ProductResponse mapToProductResponse(Product product) {
+    return ProductResponse.builder()
+        .id(product.getId())
+        .name(product.getName())
+        .description(product.getDescription())
+        .price(product.getPrice())
+        .build();
   }
 }
